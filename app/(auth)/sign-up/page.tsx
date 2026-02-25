@@ -2,6 +2,10 @@
 import {useForm} from "react-hook-form";
 import {Button} from "@/components/ui/button";
 import InputField from "@/components/forms/InputField";
+import SelectField from "@/components/forms/SelectField";
+import {INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS} from "@/lib/constants";
+import {CountrySelectField} from "@/components/forms/CountrySelectField";
+import FooterLink from "@/components/forms/FooterLink";
 
 const SignUp = () => {
 
@@ -12,7 +16,7 @@ const SignUp = () => {
         formState: { errors,isSubmitting },
     } = useForm<SignUpFormData>({
         defaultValues:{
-            fullName:'',
+            fullname:'',
             email:"",
             password:'',
             country:'US',
@@ -46,15 +50,75 @@ const SignUp = () => {
                 label="Full Name"
                 placeholder="Full Name"
                 register={register}
-                error={errors.fullName}
+                error={errors.fullname}
                 validation={{ required: 'Full name is required', minLength: 2 }}
-
-
                 />
+
+                <InputField
+                    name="email"
+                    label="Your Email"
+                    placeholder="deepak@gmail.com"
+                    register={register}
+                    error={errors.email}
+                    validation={{ required: 'Email is required',pattern: /^\w+@\w+\.\w+$/, message: 'Email address is required' }}
+                />
+
+                <InputField
+                    name="password"
+                    label="Password"
+                    placeholder="Enter your strong password"
+                    type="password"
+                    register={register}
+                    error={errors.password}
+                    validation={{ required: 'password is required', minLength: 8 }}
+                />
+
+              <CountrySelectField
+                  name="country"
+                  label="Country"
+                  control={control}
+                  error={errors.country}
+                  required
+
+
+              />
+
+                <SelectField
+                name="investmentGoals"
+                label="Investment Goals"
+                placeholder="Select your investment goal"
+                options={INVESTMENT_GOALS}
+                control={control}
+                error={errors.investmentGoals}
+                required
+                />
+
+                <SelectField
+                    name="riskTolerance"
+                    label="Risk Tolerance"
+                    placeholder="Select your risk level"
+                    options={RISK_TOLERANCE_OPTIONS}
+                    control={control}
+                    error={errors.riskTolerance}
+                    required
+                />
+
+                <SelectField
+                    name="preferredIndustry"
+                    label="Preferred Industry"
+                    placeholder="Select your industry"
+                    options={PREFERRED_INDUSTRIES}
+                    control={control}
+                    error={errors.preferredIndustry}
+                    required
+                />
+
                 <Button type="submit" disabled={isSubmitting} className="yellow-btn w-full mt-5" >
 
                     {isSubmitting ? 'Create account' : 'Start Your Investing Journey'}
                 </Button>
+                
+                <FooterLink text="Already have a account" linkText="sign-in" href="/sign-in"></FooterLink>
 
 
             </form>
