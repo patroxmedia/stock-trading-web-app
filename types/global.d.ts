@@ -5,7 +5,7 @@ declare global {
     };
 
     type SignUpFormData = {
-        fullName: string;
+        fullname: string;
         email: string;
         password: string;
         country: string;
