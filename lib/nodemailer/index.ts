@@ -1,19 +1,21 @@
 import nodemailer from "nodemailer";
-import {WELCOME_EMAIL_TEMPLATE} from "@/lib/nodemailer/templates";
+import {WELCOME_EMAIL_TEMPLATE,NEWS_SUMMARY_EMAIL_TEMPLATE} from "@/lib/nodemailer/templates";
 export const transporter= nodemailer.createTransport({
-    service: 'gmail',
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
-        user: process.env.GMAIL_USERNAME,
-        pass: process.env.GMAIL_PASSWORD,
+        user: process.env.NODEMAILER_EMAIL,
+        pass: process.env.NODEMAILER_PASSWORD,
     }
 })
 
 export const sendWelcomeEmail = async ({email,name,intro}:WelcomeEmailData)=>{
     const htmlTemplate = WELCOME_EMAIL_TEMPLATE
         .replace('{{name}}', name)
-    .replace('{{intro}}', intro);
+        .replace('{{intro}}', intro);
     const mailOptions = {
-        from: `"Fireloard" <deepak.patroxmedia@gmail.com>`,
+        from: `"Fireloard" <${process.env.NODEMAILER_EMAIL}>`,
         to: email,
         subject: 'Welcome to Fireloard -your Stock market toolkit is ready',
         text:'Thank you for Joining Fireload !',
@@ -21,3 +23,21 @@ export const sendWelcomeEmail = async ({email,name,intro}:WelcomeEmailData)=>{
     }
     await transporter.sendMail(mailOptions);
 }
+
+export const sendNewsSummaryEmail = async (
+    { email, date, newsContent }: { email: string; date: string; newsContent: string }
+): Promise<void> => {
+    const htmlTemplate = NEWS_SUMMARY_EMAIL_TEMPLATE
+        .replace('{{date}}', date)
+        .replace('{{newsContent}}', newsContent);
+
+    const mailOptions = {
+        from: `"Fireloard News" <${process.env.NODEMAILER_EMAIL}>`,
+        to: email,
+        subject: `📈 Market News Summary Today - ${date}`,
+        text: `Today's market news summary from Fireload`,
+        html: htmlTemplate,
+    };
+
+    await transporter.sendMail(mailOptions);
+};
